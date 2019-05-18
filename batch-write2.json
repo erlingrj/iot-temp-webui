@@ -1,0 +1,23 @@
+{
+  "TempTable": [
+    {
+      "PutRequest": {
+        "Item":
+        {
+          "CustomerID": {
+            "N": "1"
+          },
+          "TimeStamp": {
+            "S": "13-5-2019-22-45-45"
+          },
+          "EntryID": {
+              "N": "0"
+          },
+          "Data": {
+              "S": "40.14"
+          }
+          
+        }
+      }
+    }]
+}

@@ -1,0 +1,64 @@
+{
+  "TempTable": [
+    {
+      "PutRequest": {
+        "Item":
+        {
+          "CustomerID": {
+            "N": "1"
+          },
+          "TimeStamp": {
+            "S": "13-5-2019-22-38-38"
+          },
+          "EntryID": {
+              "N": "0"
+          },
+          "Data": {
+              "S": "22.14"
+          }
+          
+        }
+      }
+    },
+    {
+        "PutRequest": {
+          "Item":
+          {
+            "CustomerID": {
+              "N": "1"
+            },
+            "TimeStamp": {
+              "S": "13-5-2019-22-39-38"
+            },
+            "EntryID": {
+                "N": "0"
+            },
+            "Data": {
+                "S": "23.14"
+            }
+            
+          }
+        }
+      },
+      {
+        "PutRequest": {
+          "Item":
+          {
+            "CustomerID": {
+              "N": "1"
+            },
+            "TimeStamp": {
+              "S": "13-5-2019-22-40-38"
+            },
+            "EntryID": {
+                "N": "1"
+            },
+            "Data": {
+                "S": "20.0"
+            }
+            
+          }
+        }
+      }
+  ]
+}
