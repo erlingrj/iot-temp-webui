@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <title>Temperature Stats</title>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"></script>
 </head>
 
 <body>
@@ -11,23 +11,37 @@
     <h1>Last 24 hours</h1>
     <canvas id="chart24" width="1000" height="200"></canvas>
     <script>
-      
       var my_labels = ["02:00", "04:00", "10:00", "15:00"]
       var my_values = [15,12,18,24]
       // bar chart data
+
       var barData = {
         labels : my_labels,
         datasets : [{
-          fillColor: "rgba(151,187,205,0.2)",
-          strokeColor: "rgba(151,187,205,1)",
-          pointColor: "rgba(151,187,205,1)",
-          pointStrokeColor: "#fff",
-          pointHighlightFill: "#fff",
-          pointHighlightStroke: "rgba(151,187,205,1)",
-          bezierCurve : false,
+          borderColor: "#c45850",
+          fill: false,
           data : my_values
-      }]
-    }
+        }],
+      };
+      var options = {
+				scales: {
+					xAxes: [{
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'Time'
+						}
+					}],
+					yAxes: [{
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'Temperature (Celsius)'
+						}
+					}]
+				}
+      };
+      
       Chart.defaults.global.animationSteps = 50;
       Chart.defaults.global.tooltipYPadding = 16;
       Chart.defaults.global.tooltipCornerRadius = 0;
@@ -39,27 +53,22 @@
       Chart.defaults.global.scaleFontSize = 16;
 
       // get bar chart canvas
-      var mychart = document.getElementById("chart24").getContext("2d");
+      var ctx = document.getElementById("chart24").getContext("2d");
 
       steps = 10
       max = 25
       // draw bar chart
-      var LineChartDemo = new Chart(mychart).Line(barData, {
-        scaleOverride: true,
-        scaleSteps: steps,
-        scaleStepWidth: Math.ceil(max / steps),
-        scaleStartValue: 0,
-        scaleShowVerticalLines: true,
-        scaleShowGridLines : true,
-        barShowStroke : true,
-        scaleShowLabels: true,
-        bezierCurve: false,
+      var myLineChart = new Chart(ctx, {
+        type: 'line',
+        data: barData,
+        options: options,
       });
 
     </script>
   <h1>Last Week</h1>
     <canvas id="chartweek" width="1000" height="200"></canvas>
     <script>
+      
 
       var my_labels = ["Mon 02:00", "Tue 04:00", "Wed 10:00", "Thu 15:00"]
       var my_values = [15,12,18,24]
@@ -67,16 +76,30 @@
       var barData = {
         labels : my_labels,
         datasets : [{
-          fillColor: "rgba(151,187,205,0.2)",
-          strokeColor: "rgba(151,187,205,1)",
-          pointColor: "rgba(151,187,205,1)",
-          pointStrokeColor: "#fff",
-          pointHighlightFill: "#fff",
-          pointHighlightStroke: "rgba(151,187,205,1)",
-          bezierCurve : false,
+          borderColor: "#3e95cd",
+          fill: false,
           data : my_values
       }]
     }
+
+    var options = {
+				scales: {
+					xAxes: [{
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'Time'
+						}
+					}],
+					yAxes: [{
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'Temperature (Celsius)'
+						}
+					}]
+				}
+      };
       Chart.defaults.global.animationSteps = 50;
       Chart.defaults.global.tooltipYPadding = 16;
       Chart.defaults.global.tooltipCornerRadius = 0;
@@ -88,11 +111,19 @@
       Chart.defaults.global.scaleFontSize = 16;
 
       // get bar chart canvas
-      var mychart = document.getElementById("chartweek").getContext("2d");
+      var ctx = document.getElementById("chartweek").getContext("2d");
 
       steps = 10
       max = 25
-      // draw bar chart
+
+      var myLineChart = new Chart(ctx, {
+        type: 'line',
+        data: barData,
+        options: options,
+      });
+
+      // draw bar chart 
+      /*
       var LineChartDemo = new Chart(mychart).Line(barData, {
         scaleOverride: true,
         scaleSteps: steps,
@@ -103,8 +134,24 @@
         barShowStroke : true,
         scaleShowLabels: true,
         bezierCurve: false,
+        scales: {
+					xAxes: [{
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'Month'
+						}
+					}],
+					yAxes: [{
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'Value'
+						}
+					}]
+				},
       });
-
+      */
     </script>
   </center>
 </body>
