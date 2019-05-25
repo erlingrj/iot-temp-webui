@@ -29,6 +29,7 @@ async def index():
 async def stats():
     # Here we will display the historical stuff
     # Maybe make some interesting plots?
+    
     return await render_template('stats.html', data24h=(["02:00", "04:00", "10:00", "15:00"],[17,14,18,22]), data1w=(["Mon 08:00", "Mon 16:00", "Wed 08:00", "Wed 16:00"],[17, 21, 18, 22]))
 
 @app.route('/new-control-policy')

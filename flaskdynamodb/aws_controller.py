@@ -77,28 +77,47 @@ def db_get_stats():
         FilterExpression=Attr('EntryID').eq(0)
     )
     if response['Count'] > 0:
-        data24h = db_get24h(response)
+        data24h = db_get_24h(response)
+        print(data24h)
         #data1w = db_get1w(response)
     else:
         print("ERROR IN DB_GET_STATS()")
 
-def db_get_24h():
+def db_get_24h(response):
+    n_hours = 24
     now = datetime.datetime.now()
-    h = datetime.timedelta(hours=2)
-    now.minute = 0
-    now.second = 0
+    h = datetime.timedelta(hours=1)
+    now = now.replace(minute = 0, second=0)
     labels = [now]
+    values = [None] * 24
     # Construct the labels as datetime objects
-    for (i in range(0,11)):
+    for i in range(0,24):
         now -= h
         labels.append(now)
     
+    running_vals = []
+    label_i = 0 # Iterator through the labels
     # Now lookup last 
     for e in response['Items']:
-        
+        print(e)
+        ts = list(map(int, e['Timestamp'].split('-'))) #Extract timestamp and convert it to int
+        d= datetime.datetime(ts[2],ts[1],ts[0],ts[3],ts[4]) #Construct a datetime object of current entry
+        if d>labels[label_i+1]: # If this entry belongs to label_i
+            running_vals.append(float(e['Data']))
+        else: # We have to move down the label list
+            print("Next label")
+            print(running_vals)
+            if len(running_vals) > 0:
+                values[label_i] = sum(running_vals)/len(running_vals)
+                running_vals = []
+            label_i += 1
+            if label_i >= 24:
+                break
 
-        
+    str_labels = [label.strftime("%a %H:%m") for label in labels]
 
+    return (str_labels, values)
 
 
 def db_get_1w():
+    print("TO BE IMPLEMENTED")
