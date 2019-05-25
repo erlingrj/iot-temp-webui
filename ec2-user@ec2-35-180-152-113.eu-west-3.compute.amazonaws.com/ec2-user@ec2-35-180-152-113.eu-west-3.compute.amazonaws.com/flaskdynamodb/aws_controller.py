@@ -1,7 +1,6 @@
 import boto3
 import json
 import decimal
-import datetime
 from boto3.dynamodb.conditions import Key, Attr
 
 DBG = True
@@ -57,7 +56,7 @@ def db_post(content):
         table.put_item(
             Item={
                 'CustomerID' : content['CustomerID'],
-                'Timestamp'  : content['Timestamp'],
+                'TimeStamp'  : content['TimeStamp'],
                 'EntryID'    : content['EntryID'],
                 'Data'       : content['Data']
             }
@@ -65,40 +64,3 @@ def db_post(content):
         return 1
     except:
         return -1
-
-# The following functions are for getting the stats out of the DB
-# They are hardcoded for retrieving exactly what we want
-
-def db_get_stats():
-    table = db.Table(DB_NAME)
-    response = table.query(
-        KeyConditionExpression = Key('CustomerID').eq(CUSTOMER_ID),
-        ScanIndexForward = False,
-        FilterExpression=Attr('EntryID').eq(0)
-    )
-    if response['Count'] > 0:
-        data24h = db_get24h(response)
-        #data1w = db_get1w(response)
-    else:
-        print("ERROR IN DB_GET_STATS()")
-
-def db_get_24h():
-    now = datetime.datetime.now()
-    h = datetime.timedelta(hours=2)
-    now.minute = 0
-    now.second = 0
-    labels = [now]
-    # Construct the labels as datetime objects
-    for (i in range(0,11)):
-        now -= h
-        labels.append(now)
-    
-    # Now lookup last 
-    for e in response['Items']:
-        
-
-        
-
-
-
-def db_get_1w():
