@@ -1,0 +1,97 @@
+<link type="text/css" id="dark-mode" rel="stylesheet" href=""><style type="text/css" id="dark-mode-custom-style"></style><head>
+        <meta charset="utf-8">
+        <title>Chart.js Drag Data Points Plugin</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.js"></script><style type="text/css">/* Chart.js */
+    @-webkit-keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}@keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}.chartjs-render-monitor{-webkit-animation:chartjs-render-animation 0.001s;animation:chartjs-render-animation 0.001s;}</style>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-dragdata@0.3.0/dist/chartjs-plugin-dragData.min.js"></script>
+    </head>
+    <body>
+    <canvas id="chartControl" width="1000" height="300"></canvas>
+    <script>
+      var my_labels = ["02:00", "04:00", "06:00", "08:00", "10:00", "12:00", "14:00", "16:00", "18:00", "20:00", "22:00", "00:00"]
+      var my_values = [18,18,18,20,18,18,20,20,20,20,18,17]
+      // bar chart data
+
+      var barData = {
+        labels : my_labels,
+        datasets : [{
+          borderColor: "#c45850",
+          fill: false,
+          data : my_values
+        }],
+      };
+      var options = {
+            scales: {
+                xAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Time'
+                    },
+                }],
+                yAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Temperature (Celsius)'
+                    },
+                    ticks: {
+                        suggestedMin: 10,
+                        suggestedMax: 30
+                    }
+                }],
+            },
+            legend: {
+                display : false
+            },
+            dragData: true,
+            onDragStart: function (e) {
+                console.log(e)
+            },
+            onDrag: function (e, datasetIndex, index, value) {
+                console.log(datasetIndex, index, value)
+            },
+            onDragEnd: function (e, datasetIndex, index, value) {
+                console.log(datasetIndex, index, value)
+            }
+        };
+        
+   
+      
+      Chart.defaults.global.animationSteps = 50;
+      Chart.defaults.global.tooltipYPadding = 16;
+      Chart.defaults.global.tooltipCornerRadius = 0;
+      Chart.defaults.global.tooltipTitleFontStyle = "normal";
+      Chart.defaults.global.tooltipFillColor = "rgba(0,0,0,0.8)";
+      Chart.defaults.global.animationEasing = "easeOutBounce";
+      Chart.defaults.global.responsive = false;
+      Chart.defaults.global.scaleLineColor = "black";
+      Chart.defaults.global.scaleFontSize = 16;
+
+      // get bar chart canvas
+      var ctx = document.getElementById("chartControl").getContext("2d");
+
+      steps = 10
+      max = 25
+      // draw bar chart
+      var myLineChart = new Chart(ctx, {
+        type: 'line',
+        data: barData,
+        options: options,
+      });
+      </script>
+       <button>Update Control Policy</button>
+       <button>Reset</button>
+       <script>
+       var UpdateButton = document.getElementsByTagName('button')[0];
+       UpdateButton.onclick = function() {
+          console.log("Update Button clicked")
+       };
+
+       var ResetButton = document.getElementsByTagName('button')[1];
+       ResetButton.onclick = function() {
+           console.log("Reset button clicked")
+       };
+       </script>       
+    </body>
+</html>
