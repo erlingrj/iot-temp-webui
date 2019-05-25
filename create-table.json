@@ -2,11 +2,11 @@
     "TableName": "TempTable",
     "KeySchema": [
       { "AttributeName": "CustomerID", "KeyType": "HASH" },
-      { "AttributeName": "TimeStamp", "KeyType": "RANGE" }
+      { "AttributeName": "Timestamp", "KeyType": "RANGE" }
     ],
     "AttributeDefinitions": [
       { "AttributeName": "CustomerID", "AttributeType": "N" },
-      { "AttributeName": "TimeStamp", "AttributeType": "S" }
+      { "AttributeName": "Timestamp", "AttributeType": "S" }
     ],
     "ProvisionedThroughput": {
       "ReadCapacityUnits": 5,

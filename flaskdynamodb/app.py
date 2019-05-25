@@ -29,7 +29,7 @@ async def index():
 async def stats():
     # Here we will display the historical stuff
     # Maybe make some interesting plots?
-    return "TODO: IMPLEMENT STATS PAGE"
+    return await render_template('stats.html', data24h=(["02:00", "04:00", "10:00", "15:00"],[17,14,18,22]), data1w=(["Mon 08:00", "Mon 16:00", "Wed 08:00", "Wed 16:00"],[17, 21, 18, 22]))
 
 @app.route('/new-control-policy')
 async def new_control_policy():
@@ -47,7 +47,7 @@ async def send_control_policy():
         t = datetime.datetime.now()
         db_entry = {
             'CustomerID' : CURRENT_CUSTOMER,
-            'TimeStamp'  : "{}-{}-{}-{}-{}-{}".format(t.day, t.month, t.year, t.hour, t.minute, t.second),
+            'Timestamp'  : "{}-{}-{}-{}-{}-{}".format(t.day, t.month, t.year, t.hour, t.minute, t.second),
             'EntryID'    : EntryType['CONTROL'],
             'Data'       : data
         }
@@ -64,8 +64,6 @@ async def send_control_policy():
 #           API TO THE DATABASE FOR RPI           #
 #                                                 #
 ###################################################
-
-# Dict that map an string describing an entry to its entryID
 
 # Dict that maps the API-KEYS to customerIDs
 customerApiKey2IdMap = {12345 : 1, 54321 : 2}

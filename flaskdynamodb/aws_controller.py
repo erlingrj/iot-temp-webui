@@ -56,7 +56,7 @@ def db_post(content):
         table.put_item(
             Item={
                 'CustomerID' : content['CustomerID'],
-                'TimeStamp'  : content['TimeStamp'],
+                'Timestamp'  : content['Timestamp'],
                 'EntryID'    : content['EntryID'],
                 'Data'       : content['Data']
             }
