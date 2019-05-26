@@ -5,10 +5,15 @@
   <title>Temperature Stats</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"></script>
 </head>
-
+<link rel="stylesheet" href="style.css">
+<div class = "topnav">
+    <a href = "index.html">Dashboard</a>
+    <a class = "active" href = "stats.html">Statistics</a>
+    <a href= "control.html"> Update Control Policy</a>
+    <a href = "about.html">About</a>
+  </div>
 <body>
-  <center>
-    <h1>Last 24 hours</h1>
+    <h2>Last 24 hours</h2>
     <canvas id="chart24" width="1000" height="200"></canvas>
     <script>
       var my_labels = ["02:00", "04:00", "10:00", "15:00"]
@@ -65,7 +70,7 @@
       });
 
     </script>
-  <h1>Last Week</h1>
+  <h2>Last Week</h2>
     <canvas id="chartweek" width="1000" height="200"></canvas>
     <script>
       
@@ -153,6 +158,5 @@
       });
       */
     </script>
-  </center>
 </body>
 </html>
