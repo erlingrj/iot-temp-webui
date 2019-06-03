@@ -5,12 +5,13 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.js"></script><style type="text/css">/* Chart.js */
     @-webkit-keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}@keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}.chartjs-render-monitor{-webkit-animation:chartjs-render-animation 0.001s;animation:chartjs-render-animation 0.001s;}</style>
         <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-dragdata@0.3.0/dist/chartjs-plugin-dragData.min.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     </head>
     <div class = "topnav">
-    <a href = "index.html">Dashboard</a>
-    <a href = "stats.html">Statistics</a>
-    <a class = "active" href= "control.html"> Update Control Policy</a>
-    <a href = "about.html">About</a>
+    <a href = "index">Dashboard</a>
+    <a href = "stats">Statistics</a>
+    <a class = "active" href= "control"> Update Control Policy</a>
+    <a href = "about">About</a>
     </div>
     <body>
 
@@ -21,6 +22,11 @@
     <script>
       var my_labels = ["02:00", "04:00", "06:00", "08:00", "10:00", "12:00", "14:00", "16:00", "18:00", "20:00", "22:00", "00:00"]
       var my_values = [18,18,18,20,18,18,20,20,20,20,18,17]
+      var my_values2 = [
+        {% for item in control_policy %}
+               "{{ item }}",
+              {% endfor %}]
+      var my_values_old = my_values2;
       // bar chart data
 
       var barData = {
@@ -28,7 +34,7 @@
         datasets : [{
           borderColor: "#c45850",
           fill: false,
-          data : my_values
+          data : my_values2
         }],
       };
       var options = {
@@ -56,14 +62,17 @@
                 display : false
             },
             dragData: true,
-            onDragStart: function (e) {
+            
+            /*onDragStart: function (e) {
                 console.log(e)
             },
             onDrag: function (e, datasetIndex, index, value) {
                 console.log(datasetIndex, index, value)
             },
+            */
             onDragEnd: function (e, datasetIndex, index, value) {
                 console.log(datasetIndex, index, value)
+                my_values2[index] = value
             }
         };
         
@@ -81,9 +90,6 @@
 
       // get bar chart canvas
       var ctx = document.getElementById("chartControl").getContext("2d");
-
-      steps = 10
-      max = 25
       // draw bar chart
       var myLineChart = new Chart(ctx, {
         type: 'line',
@@ -92,16 +98,28 @@
       });
       </script>
        <button>Update Control Policy</button>
-       <button>Reset</button>
        <script>
        var UpdateButton = document.getElementsByTagName('button')[0];
        UpdateButton.onclick = function() {
-          console.log("Update Button clicked")
-       };
+           const Url = "http://127.0.0.1:5000/db/post-control"
+           const date = new Date()
+           date.setMilliseconds(0);
+           ISODate = date.toISOString();
+           ISODate = ISODate.slice(0, ISODate.length-5);
+            axios({
+                method: 'post',
+                url: Url,
+                data:
+                    {	
+                        'APIKEY': {{APIKEY}},
+                        'Timestamp': ISODate,
+                        'Data': my_values2.join('-')
+                    }
+            })
+            .then(data=>console.log(data))
+            .catch(err=>console.log(err))
 
-       var ResetButton = document.getElementsByTagName('button')[1];
-       ResetButton.onclick = function() {
-           console.log("Reset button clicked")
+
        };
        </script>       
     </body>

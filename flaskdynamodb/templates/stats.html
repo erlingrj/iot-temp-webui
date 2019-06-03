@@ -7,10 +7,10 @@
 </head>
 <link rel="stylesheet" href="style.css">
 <div class = "topnav">
-    <a href = "index.html">Dashboard</a>
-    <a class = "active" href = "stats.html">Statistics</a>
-    <a href= "control.html"> Update Control Policy</a>
-    <a href = "about.html">About</a>
+    <a href = "index">Dashboard</a>
+    <a class = "active" href = "stats">Statistics</a>
+    <a href= "control"> Update Control Policy</a>
+    <a href = "about">About</a>
   </div>
 <body>
     <h2>Last 24 hours</h2>
@@ -18,14 +18,24 @@
     <script>
       var my_labels = ["02:00", "04:00", "10:00", "15:00"]
       var my_values = [15,12,18,24]
+
+      var my_labels2 = [
+          {% for item in data24h[0] %}
+               "{{ item }}",
+              {% endfor %}
+              ]
+      var my_values2 = [
+        {% for item in data24h[1] %}
+               "{{ item }}",
+              {% endfor %}]
       // bar chart data
 
       var barData = {
-        labels : my_labels,
+        labels : my_labels2,
         datasets : [{
           borderColor: "#c45850",
           fill: false,
-          data : my_values
+          data : my_values2
         }],
       };
       var options = {
@@ -43,8 +53,11 @@
 							display: true,
 							labelString: 'Temperature (Celsius)'
 						}
-					}]
-				}
+          }]
+        },
+        legend: {
+          display: false
+        }
       };
       
       Chart.defaults.global.animationSteps = 50;
@@ -77,13 +90,24 @@
 
       var my_labels = ["Mon 02:00", "Tue 04:00", "Wed 10:00", "Thu 15:00"]
       var my_values = [15,12,18,24]
+
+      var my_labels2 = [
+          {% for item in data1w[0] %}
+               "{{ item }}",
+              {% endfor %}
+              ]
+      var my_values2 = [
+        {% for item in data1w[1] %}
+               "{{ item }}",
+              {% endfor %}]
+
       // bar chart data
       var barData = {
-        labels : my_labels,
+        labels : my_labels2,
         datasets : [{
           borderColor: "#3e95cd",
           fill: false,
-          data : my_values
+          data : my_values2
       }]
     }
 
@@ -102,8 +126,11 @@
 							display: true,
 							labelString: 'Temperature (Celsius)'
 						}
-					}]
-				}
+          }]
+        },
+        legend: {
+          display: false
+        }
       };
       Chart.defaults.global.animationSteps = 50;
       Chart.defaults.global.tooltipYPadding = 16;

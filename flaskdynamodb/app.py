@@ -17,6 +17,10 @@ EntryType = {
     'CONTROL' : 1
 }
 
+customerApiKey2IdMap = {
+    12345:1,
+    54321:2
+}
 
 @app.route('/')
 async def index():
@@ -29,14 +33,21 @@ async def index():
 async def stats():
     # Here we will display the historical stuff
     # Maybe make some interesting plots?
+    last24, lastw = aws_controller.db_get_stats()
     
-    return await render_template('stats.html', data24h=(["02:00", "04:00", "10:00", "15:00"],[17,14,18,22]), data1w=(["Mon 08:00", "Mon 16:00", "Wed 08:00", "Wed 16:00"],[17, 21, 18, 22]))
+    return await render_template('stats.html', data24h=last24, data1w=lastw)
 
-@app.route('/new-control-policy')
+@app.route('/control')
 async def new_control_policy():
     # When the user wishes to make a new control policy
     # He will end up in this page
-    return "TODO: IMPLEMENT NEW CONTROL POLICY PAGE"
+    current_control = list(map(float, aws_controller.db_get_last_control()['Data'].split('-')))
+    
+    return await render_template('control.html', control_policy = current_control, APIKEY=12345)
+
+@app.route('/about')
+async def about():
+    return await render_template('about.html')
 # This is a websocket to let the Javascript running in the browser
 # Communicate with us. When the user has chosen a new Control Policy
 # He will press a button that sends it here
@@ -67,8 +78,6 @@ async def send_control_policy():
 ###################################################
 
 # Dict that maps the API-KEYS to customerIDs
-customerApiKey2IdMap = {12345 : 1, 54321 : 2}
-
 @app.route('/db/get-last-temp', methods=["GET"])
 async def get_last_temp():
     return json.dumps(aws_controller.db_get_last_temp(), cls=DecimalEncoder)

@@ -5,25 +5,13 @@
   </head>
   <link rel="stylesheet" href="style.css">
   <div class = "topnav">
-      <a class = "active" href= "index.html">Dashboard</a>
-      <a href = "stats.html">Statistics</a>
-      <a href= "control.html"> Update Control Policy</a>
-      <a href = "about.html">About</a>
+      <a class = "active" href= "index">Dashboard</a>
+      <a href = "stats">Statistics</a>
+      <a href= "control"> Update Control Policy</a>
+      <a href = "about">About</a>
       </div>
   <body>
     <h1>Current Temperature: {{current_temp}}</h1>
     <h1>Current Control: {{current_control}}</h1>
-    <input type="text" id="message">
-    <button>Send</button>
-    <ul></ul>
-    <script type="text/javascript">
-      var ws = new WebSocket('ws://' + document.domain + ':' + location.port + '/send-control-policy');
-      var button = document.getElementsByTagName('button')[0];
-      button.onclick = function() {
-        var content = document.getElementsByTagName('input')[0].value;
-        ws.send(content);
-        location.reload()
-      };
-    </script>
   </body>
 </html>
