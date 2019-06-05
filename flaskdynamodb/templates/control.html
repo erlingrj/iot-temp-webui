@@ -1,17 +1,18 @@
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="static/style.css">
 </head>
 <meta charset="utf-8">
-        <title>Chart.js Drag Data Points Plugin</title>
+        <title>Update Control Policy</title>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.js"></script><style type="text/css">/* Chart.js */
     @-webkit-keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}@keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}.chartjs-render-monitor{-webkit-animation:chartjs-render-animation 0.001s;animation:chartjs-render-animation 0.001s;}</style>
         <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-dragdata@0.3.0/dist/chartjs-plugin-dragData.min.js"></script>
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     </head>
     <div class = "topnav">
-    <a href = "index">Dashboard</a>
+    <a href = "/">Dashboard</a>
     <a href = "stats">Statistics</a>
     <a class = "active" href= "control"> Update Control Policy</a>
     <a href = "about">About</a>
+    <a href= "logout"> Log out</a>
     </div>
     <body>
 
@@ -20,13 +21,12 @@
     
     <canvas id="chartControl" width="1000" height="300"></canvas>
     <script>
+    const APIKEY = "{{APIKEY}}"
       var my_labels = ["02:00", "04:00", "06:00", "08:00", "10:00", "12:00", "14:00", "16:00", "18:00", "20:00", "22:00", "00:00"]
-      var my_values = [18,18,18,20,18,18,20,20,20,20,18,17]
       var my_values2 = [
         {% for item in control_policy %}
                "{{ item }}",
               {% endfor %}]
-      var my_values_old = my_values2;
       // bar chart data
 
       var barData = {
@@ -69,11 +69,12 @@
             onDrag: function (e, datasetIndex, index, value) {
                 console.log(datasetIndex, index, value)
             },
-            */
+            
             onDragEnd: function (e, datasetIndex, index, value) {
                 console.log(datasetIndex, index, value)
                 my_values2[index] = value
             }
+            */
         };
         
    
@@ -111,7 +112,7 @@
                 url: Url,
                 data:
                     {	
-                        'APIKEY': {{APIKEY}},
+                        'APIKEY': APIKEY,
                         'Timestamp': ISODate,
                         'Data': my_values2.join('-')
                     }

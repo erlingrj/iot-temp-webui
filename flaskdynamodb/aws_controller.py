@@ -23,32 +23,32 @@ class DecimalEncoder(json.JSONEncoder):
         return super(DecimalEncoder, self).default(o)
 
 
-def db_get_last_temp():
+def db_get_last_temp(customerID):
     table = db.Table(DB_NAME)
     response = table.query(
-        KeyConditionExpression = Key('CustomerID').eq(CUSTOMER_ID),
+        KeyConditionExpression = Key('CustomerID').eq(customerID),
         ScanIndexForward = False,
         FilterExpression=Attr('EntryID').eq(0)
     )
     if response['Count'] > 0:
         return response['Items'][0]
     else:
-        return 0
+        return None
 
 
 
-def db_get_last_control():
+def db_get_last_control(customerID):
     # Return the last control entry from the DB
     table = db.Table(DB_NAME)
     response = table.query(
-        KeyConditionExpression = Key('CustomerID').eq(CUSTOMER_ID), #Check only for our guy
+        KeyConditionExpression = Key('CustomerID').eq(customerID), #Check only for our guy
         ScanIndexForward = False, #Backwards so we start from the last
         FilterExpression=Attr('EntryID').eq(1) #Check for EntryID = 1 that is a Control Event
     )
     if response['Count'] > 0:
         return response['Items'][0]
     else:
-        return 0
+        return None
 
 def db_post(content):
     table = db.Table(DB_NAME)
@@ -70,21 +70,20 @@ def db_post(content):
 # The following functions are for getting the stats out of the DB
 # They are hardcoded for retrieving exactly what we want
 
-def db_get_stats():
+def db_get_stats(customerID):
     table = db.Table(DB_NAME)
 
-    data24h = db_get_24h(table)
-    data1w = db_get_1w(table)
+    data24h = db_get_24h(table, customerID)
+    data1w = db_get_1w(table, customerID)
     return (data24h, data1w)
     
 
 
-def db_get_temp_from_dates(table,dates):
+def db_get_temp_from_dates(table,dates,customerID):
     values = [None] * (len(dates)-1)
     for i in range(0, len(dates)-1):
-        print(i, dates[i].isoformat(), dates[i+1].isoformat())
         response = table.query(
-            KeyConditionExpression = Key('CustomerID').eq(CUSTOMER_ID) & Key('Timestamp').between(dates[i].isoformat(), dates[i+1].isoformat()),
+            KeyConditionExpression = Key('CustomerID').eq(customerID) & Key('Timestamp').between(dates[i].isoformat(), dates[i+1].isoformat()),
             ScanIndexForward = False,
             FilterExpression=Attr('EntryID').eq(0)
         )
@@ -102,7 +101,7 @@ def db_get_temp_from_dates(table,dates):
 
 
 
-def db_get_24h(table):
+def db_get_24h(table,customerID):
     n_hours = 24
     now = datetime.datetime.now()
     h = datetime.timedelta(hours=1)
@@ -112,16 +111,15 @@ def db_get_24h(table):
     for i in range(24,-1,-1):
         dates.append(now_rounded - i*h)
     dates.append(now.replace(microsecond = 0))
-    print(dates)
     
-    values = db_get_temp_from_dates(table, dates)
+    values = db_get_temp_from_dates(table, dates, customerID)
     
     #Generate the strings for the plotting
     str_labels = [date.strftime("%a %H:%M") for date in dates[0:-1]]
 
     return (str_labels, values)
 
-def db_get_1w(table):
+def db_get_1w(table, customerID):
     n_datapoints = 28
     res = 6
     now = datetime.datetime.now().replace(microsecond=0)
@@ -135,8 +133,7 @@ def db_get_1w(table):
         dates.append(now_rounded - i*h)
     
     dates.append(now)
-    print(dates)
-    values = db_get_temp_from_dates(table,dates)
+    values = db_get_temp_from_dates(table,dates,customerID)
 
    
 

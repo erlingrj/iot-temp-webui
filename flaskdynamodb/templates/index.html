@@ -2,16 +2,83 @@
 <html>
   <head>
     <title>Temperature Sensor Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"></script>
   </head>
-  <link rel="stylesheet" href="style.css">
-  <div class = "topnav">
-      <a class = "active" href= "index">Dashboard</a>
-      <a href = "stats">Statistics</a>
-      <a href= "control"> Update Control Policy</a>
-      <a href = "about">About</a>
-      </div>
   <body>
-    <h1>Current Temperature: {{current_temp}}</h1>
-    <h1>Current Control: {{current_control}}</h1>
+    <menu>
+        <link rel="stylesheet" href="static/style.css">
+        <div class = "topnav">
+            <a class = "active" href= "/">Dashboard</a>
+            <a href = "stats">Statistics</a>
+            <a href= "control"> Update Control Policy</a>
+            <a href = "about">About</a>
+            <a href= "logout"> Log out</a>
+            </div>
+    </menu>
+    <content>
+        <h2>Current Temperature: {{current_temp}}</h2>
+        <h2> Current Control Policy</h2>
+        <canvas id="chart24" width="1000" height="200"></canvas>
+    <script>
+        var my_labels = ["02:00", "04:00", "06:00", "08:00", "10:00", "12:00", "14:00", "16:00", "18:00", "20:00", "22:00", "00:00"]
+        var my_values2 = [
+          {% for item in current_control %}
+               "{{ item }}",
+              {% endfor %}
+              ]
+      var barData = {
+        labels : my_labels,
+        datasets : [{
+          borderColor: "#c45850",
+          fill: false,
+          data : my_values2
+        }],
+      };
+      var options = {
+				scales: {
+					xAxes: [{
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'Time'
+						}
+					}],
+					yAxes: [{
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'Temperature (Celsius)'
+						}
+          }]
+        },
+        legend: {
+          display: false
+        }
+      };
+      
+      Chart.defaults.global.animationSteps = 50;
+      Chart.defaults.global.tooltipYPadding = 16;
+      Chart.defaults.global.tooltipCornerRadius = 0;
+      Chart.defaults.global.tooltipTitleFontStyle = "normal";
+      Chart.defaults.global.tooltipFillColor = "rgba(0,0,0,0.8)";
+      Chart.defaults.global.animationEasing = "easeOutBounce";
+      Chart.defaults.global.responsive = false;
+      Chart.defaults.global.scaleLineColor = "black";
+      Chart.defaults.global.scaleFontSize = 16;
+
+      // get bar chart canvas
+      var ctx = document.getElementById("chart24").getContext("2d");
+
+      steps = 10
+      max = 25
+      // draw bar chart
+      var myLineChart = new Chart(ctx, {
+        type: 'line',
+        data: barData,
+        options: options,
+      });
+     
+    </script>
+    </content>  
   </body>
 </html>
