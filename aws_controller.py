@@ -9,6 +9,7 @@ DBG = True
 
 db = boto3.resource('dynamodb')
 DB_NAME = 'TempTable'
+DB_NAME_CURRENT = 'CurrentValue'
 CUSTOMER_ID = 1
 
 
@@ -24,14 +25,20 @@ class DecimalEncoder(json.JSONEncoder):
 
 
 def db_get_last_temp(customerID):
-    table = db.Table(DB_NAME)
+    table = db.Table(DB_NAME_CURRENT)
     response = table.query(
         KeyConditionExpression = Key('CustomerID').eq(customerID),
-        ScanIndexForward = False,
-        FilterExpression=Attr('EntryID').eq(0)
     )
     if response['Count'] > 0:
-        return response['Items'][0]
+        # A little hacking to get the dict compatible
+        res = response['Items'][0]
+        fres = {}
+        fres['EntryID'] = 0
+        fres['Data'] = res['Temp'] 
+        fres['Timestamp'] = res['TempTimestamp']       
+
+        return fres
+
     else:
         return None
 
@@ -39,19 +46,27 @@ def db_get_last_temp(customerID):
 
 def db_get_last_control(customerID):
     # Return the last control entry from the DB
-    table = db.Table(DB_NAME)
+    table = db.Table(DB_NAME_CURRENT)
     response = table.query(
         KeyConditionExpression = Key('CustomerID').eq(customerID), #Check only for our guy
-        ScanIndexForward = False, #Backwards so we start from the last
-        FilterExpression=Attr('EntryID').eq(1) #Check for EntryID = 1 that is a Control Event
     )
     if response['Count'] > 0:
-        return response['Items'][0]
+         # A little hacking to get the dict compatible
+        res = response['Items'][0]
+        print(res)
+        fres = {}
+        fres['EntryID'] = 1
+        fres['Data'] = res['Control'] 
+        fres['Timestamp'] = res['ControlTimestamp']       
+
+        return fres
+
     else:
         return None
 
 def db_post(content):
     table = db.Table(DB_NAME)
+    table_current  = db.Table(DB_NAME_CURRENT)
     if DBG:
         print(content)
     try:
@@ -63,9 +78,45 @@ def db_post(content):
                 'Data'       : content['Data']
             }
         )
-        return 1
     except:
+        print("Failed to post to TempTable DynamoDB")
         return -1
+    try:
+        if content['EntryID'] == 0:
+            print("check")
+            response = table_current.update_item(
+                            Key= {
+                                'CustomerID' : content['CustomerID']
+                            },
+                            UpdateExpression="set #Temp=:t, #TempTimestamp=:ts",
+                            ExpressionAttributeValues={
+                                ':t': content['Data'],
+                                ':ts': content['Timestamp']
+                            },
+                            ExpressionAttributeNames={
+                                "#Temp": "Temp",
+                                "#TempTimestamp": "TempTimestamp"
+                            },
+                            ReturnValues="UPDATED_NEW")
+        elif content['EntryID'] == 1:
+            response = table_current.update_item(
+                            Key={
+                                'CustomerID': content['CustomerID'],
+                            },
+                            UpdateExpression="set Control = :c, ControlTimestamp=:ts",
+                            ExpressionAttributeValues={
+                                ':c': content['Data'],
+                                ':ts': content['Timestamp']
+                            },
+                            ReturnValues="UPDATED_NEW")
+    except Exception as e:
+        print(e)
+        print("Failed to post to CurrentValue DynamoDB")
+        return -1
+    
+    return 1
+
+    
 
 # The following functions are for getting the stats out of the DB
 # They are hardcoded for retrieving exactly what we want
@@ -135,7 +186,6 @@ def db_get_1w(table, customerID):
     dates.append(now)
     values = db_get_temp_from_dates(table,dates,customerID)
 
-   
 
     str_labels = [date.strftime("%a %H:%M") for date in dates[0:-1]]
 

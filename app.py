@@ -11,6 +11,7 @@ engine = create_engine('sqlite:///users.db', echo=True)
 
 DBG = True
 
+CURRENT_PATH='current.txt'
 
 
 app = Flask(__name__)
@@ -213,7 +214,6 @@ def post_control():
         return "SUCCESS"
     else:
         return "FAIL"
-
 
 if __name__ == '__main__':
     app.secret_key = os.urandom(12)
