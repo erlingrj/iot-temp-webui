@@ -103,7 +103,8 @@
        var UpdateButton = document.getElementsByTagName('button')[0];
        UpdateButton.onclick = function() {
            const Url = "http://127.0.0.1:5000/db/post-control"
-           const date = new Date()
+           var date = new Date()
+           date.setHours(date.getHours()+2); 
            date.setMilliseconds(0);
            ISODate = date.toISOString();
            ISODate = ISODate.slice(0, ISODate.length-5);
