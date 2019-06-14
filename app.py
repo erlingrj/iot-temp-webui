@@ -15,6 +15,7 @@ DBG = True
 
 app = Flask(__name__)
 app._static_folder = 'static'
+app.secret_key = os.urandom(12)
 EntryType = {
     'TEMP' : 0,
     'CONTROL' : 1
@@ -216,5 +217,5 @@ def post_control():
 
 if __name__ == '__main__':
     app.secret_key = os.urandom(12)
-    app.run()
+    app.run(host='0.0.0.0')
 
