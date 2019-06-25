@@ -18,7 +18,7 @@
     <content>
         <h2>Current Temperature: {{current_temp}}</h2>
         <h2> Current Control Policy</h2>
-        <canvas id="chart24" width="1000" height="200"></canvas>
+        <canvas id="chart24" width="1000" height="300"></canvas>
     <script>
         var my_labels = ["02:00", "04:00", "06:00", "08:00", "10:00", "12:00", "14:00", "16:00", "18:00", "20:00", "22:00", "00:00"]
         var my_values2 = [
@@ -48,6 +48,10 @@
 						scaleLabel: {
 							display: true,
 							labelString: 'Temperature (Celsius)'
+						},
+						ticks: {
+							suggestedMin: 15,
+							suggestedMax: 25
 						}
           }]
         },

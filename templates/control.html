@@ -16,7 +16,7 @@
     </div>
     <body>
 
-    <h2>Control Policy</h2>
+    <h2>Change Control Policy</h2>
 
     
     <canvas id="chartControl" width="1000" height="300"></canvas>
@@ -53,8 +53,8 @@
                         labelString: 'Temperature (Celsius)'
                     },
                     ticks: {
-                        suggestedMin: 10,
-                        suggestedMax: 30
+                        suggestedMin: 15,
+                        suggestedMax: 25
                     }
                 }],
             },
@@ -62,6 +62,7 @@
                 display : false
             },
             dragData: true,
+	    dragDataRound: 1,
             
             /*onDragStart: function (e) {
                 console.log(e)
